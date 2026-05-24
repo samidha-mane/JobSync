@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
-
+from app.services.job_fetcher import fetch_adzuna_jobs
 from sqlalchemy.orm import Session
 
 import PyPDF2
@@ -139,4 +139,17 @@ async def match_resume(
         "extracted_skills": extracted_skills,
 
         "matches": matches
+    }
+
+@app.post("/admin/fetch-jobs")
+def trigger_job_fetch(
+    query: str = "Python developer",
+    db: Session = Depends(get_db)
+):
+
+    count = fetch_adzuna_jobs(db, query=query)
+
+    return {
+        "message": f"Fetched {count} new jobs",
+        "query": query
     }

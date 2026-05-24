@@ -60,3 +60,9 @@ def search_jobs_by_skills(
         Job.required_skills.overlap(skills)
 
     ).all()
+
+def get_job_by_source_url(db: Session, source_url: str):
+
+    return db.query(Job).filter(
+        Job.source_url == source_url
+    ).first()
